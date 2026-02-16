@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>CarryU Driver</string>
+	<string>Carry You Driver</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -46,11 +46,24 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>This app needs access to your location to track your route even when the app is in the background.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+        <string>This app uses your location to provide location-based services and improve your experience.</string>
 
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>This app needs access to your location to show nearby vehicle services while you are using the app.</string>
+        <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+        <string>This app uses your location to provide continuous location-based services even when the app is in the background.</string>
+
+        <key>NSCameraUsageDescription</key>
+        <string>This app requires access to your camera to capture photos and scan documents.</string>
+
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>This app needs access to your photo library to select and upload images.</string>
+
+        <key>NSPhotoLibraryAddUsageDescription</key>
+        <string>This app needs permission to save photos to your gallery.</string>
+
+        <key>NSAppleMusicUsageDescription</key>
+        <string>This app requires access to your media library to play and manage audio content.</string>
+
 
     <key>UIBackgroundModes</key>
     <array>
