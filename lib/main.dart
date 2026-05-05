@@ -23,7 +23,7 @@ void main() async{
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   await NotificationService().init();
-  PurchaseApi.init();
+ // PurchaseApi.init();
   runApp(const MyApp());
 }
 
