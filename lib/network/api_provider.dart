@@ -142,7 +142,6 @@ class ApiProvider {
       return CommonResponse(message: e.toString());
     }
   }
-
   Future<LicenseResponse> licenseAddApi(
     Map<String, dynamic> body,
     String licenceFrontImage,
