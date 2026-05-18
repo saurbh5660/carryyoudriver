@@ -143,6 +143,7 @@ class ApiProvider {
     }
   }
 
+
   Future<LicenseResponse> licenseAddApi(
     Map<String, dynamic> body,
     String licenceFrontImage,
