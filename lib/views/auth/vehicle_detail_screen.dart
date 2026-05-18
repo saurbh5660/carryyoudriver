@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import '../../common/textform_field.dart';
 import '../../controller/vehicle_detail_controller.dart';
 import '../../model/types_vehicle_response.dart';
 import '../../generated/assets.dart';
+import '../../network/api_constants.dart';
 import '../../routes/app_routes.dart';
 
 class VehicleDetailScreen extends StatefulWidget {
@@ -18,7 +20,6 @@ class VehicleDetailScreen extends StatefulWidget {
 
 class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
   final VehicleDetailController controller = Get.put(VehicleDetailController());
-
 
   Future<void> _selectDate(BuildContext context, TextEditingController textController) async {
     final DateTime? picked = await showDatePicker(
@@ -51,90 +52,96 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          child: Form(
-            key: controller.formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildUploadSection("Picture of Vehicle", controller.vehicleImage, 1),
-                const SizedBox(height: 20),
+        child: GetBuilder<VehicleDetailController>(
+          builder: (controller) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              child: Form(
+                key: controller.formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildUploadSection("Picture of Vehicle", controller.vehicleImage, 1),
+                    const SizedBox(height: 20),
 
-                /*_buildLabel("Type of Vehicle"),
-                _buildVehicleTypeDropdown(),
-                const SizedBox(height: 20),*/
+                    /*_buildLabel("Type of Vehicle"),
+                    _buildVehicleTypeDropdown(),
+                    const SizedBox(height: 20),*/
 
-                _buildUploadSection("Picture of Vehicle Registration", controller.registrationImage, 2),
-                const SizedBox(height: 20),
+                    _buildUploadSection("Picture of Vehicle Registration", controller.registrationImage, 2),
+                    const SizedBox(height: 20),
 
-                _buildField("Registration Expiry Date", controller.registrationExpiryController, "YYYY-MM-DD", isDate: true),
-                const SizedBox(height: 20),
+                    _buildField("Registration Expiry Date", controller.registrationExpiryController, "YYYY-MM-DD", isDate: true),
+                    const SizedBox(height: 20),
 
-                _buildUploadSection("Insurance Policy", controller.insuranceImage, 3),
-                const SizedBox(height: 20),
+                    _buildUploadSection("Insurance Policy", controller.insuranceImage, 3),
+                    const SizedBox(height: 20),
 
-                _buildField("Insurance Expiry Date", controller.insuranceExpiryController, "YYYY-MM-DD", isDate: true, hasCalendarIcon: true),
-                const SizedBox(height: 20),
+                    _buildField("Insurance Expiry Date", controller.insuranceExpiryController, "YYYY-MM-DD", isDate: true, hasCalendarIcon: true),
+                    const SizedBox(height: 20),
 
-                _buildSwitchSection(
-                    "Pets Allowed",
-                    "Can you carry pets in your vehicle?",
-                    controller.isPetsAllowed
-                ),
-
-
-                _buildSwitchSection(
-                    "7+ Seats",
-                    "Does your vehicle have 7 or more seats?",
-                    controller.isLargeVehicle
-                ),
-
-                _buildField(
-                    "Vehicle Model",
-                    controller.vehicleModelController,
-                    "e.g., Toyota Camry 2024",
-                    validator: (v) => v!.isEmpty ? "Please enter vehicle model" : null
-                ),
-                const SizedBox(height: 20),
-
-                _buildField(
-                    "Vehicle Color",
-                    controller.vehicleColorController,
-                    "e.g., Metallic Silver",
-                    validator: (v) => v!.isEmpty ? "Please enter vehicle color" : null
-                ),
-                const SizedBox(height: 20),
-                _buildField("Vehicle Number", controller.vehicleNumberController, "e.g., ABC-1234",
-                    validator: (v) => v!.isEmpty ? "Please enter vehicle number" : null),
-
-                const SizedBox(height: 40),
-
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (Get.arguments?['from'] == 'edit') {
-                        Get.back();
-                      } else {
-                        controller.submitDetails(onSuccess: () => showSuccessDialog());
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+                    _buildSwitchSection(
+                        "Pets Allowed",
+                        "Can you carry pets in your vehicle?",
+                        controller.isPetsAllowed
                     ),
-                    child: Text(
-                      Get.arguments?['from'] == 'edit' ? 'Update' : 'Submit',
-                      style: GoogleFonts.montserrat(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600),
+
+
+                    _buildSwitchSection(
+                        "7+ Seats",
+                        "Does your vehicle have 7 or more seats?",
+                        controller.isLargeVehicle
                     ),
-                  ),
+
+                    _buildField(
+                        "Vehicle Model",
+                        controller.vehicleModelController,
+                        "e.g., Toyota Camry 2024",
+                        validator: (v) => v!.isEmpty ? "Please enter vehicle model" : null
+                    ),
+                    const SizedBox(height: 20),
+
+                    _buildField(
+                        "Vehicle Color",
+                        controller.vehicleColorController,
+                        "e.g., Metallic Silver",
+                        validator: (v) => v!.isEmpty ? "Please enter vehicle color" : null
+                    ),
+                    const SizedBox(height: 20),
+                    _buildField("Vehicle Number", controller.vehicleNumberController, "e.g., ABC-1234",
+                        validator: (v) => v!.isEmpty ? "Please enter vehicle number" : null),
+
+                    const SizedBox(height: 40),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          controller.submitDetails(onSuccess: () {
+                            if (Get.arguments?['from'] == 'edit') {
+                              Get.back();
+                            } else {
+                              showSuccessDialog();
+                            }
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+                        ),
+                        child: Text(
+                          Get.arguments?['from'] == 'edit' ? 'Update' : 'Submit',
+                          style: GoogleFonts.montserrat(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
                 ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
+              ),
+            );
+          }
         ),
       ),
     );
@@ -203,11 +210,43 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
             decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(12)),
             child: imagePath.value == null
                 ? Center(child: Icon(Icons.camera_alt_outlined, color: Colors.grey.shade400, size: 28))
-                : ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.file(File(imagePath.value!), fit: BoxFit.cover)),
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: _buildImageWidget(imagePath.value!),
+                  ),
           ),
         )),
       ],
     );
+  }
+
+  Widget _buildImageWidget(String path) {
+    Logger().d("fDSFDsdgg-----"+path);
+    if (path.isEmpty) return const Icon(Icons.error);
+
+    if (path.startsWith('http')) {
+      return Image.network(
+        path,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+      );
+    } else if (path.startsWith('/images') || path.startsWith('images')) {
+      String fullUrl = path.startsWith('/') ? "${ApiConstants.userImageUrl}$path" : "${ApiConstants.userImageUrl}/$path";
+      return Image.network(
+        fullUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+      );
+    } else if (File(path).existsSync()) {
+      return Image.file(File(path), fit: BoxFit.cover);
+    } else {
+      String fullUrl = path.startsWith('/') ? "${ApiConstants.userImageUrl}$path" : "${ApiConstants.userImageUrl}/$path";
+      return Image.network(
+        fullUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+      );
+    }
   }
 
   Widget _buildLabel(String text) {

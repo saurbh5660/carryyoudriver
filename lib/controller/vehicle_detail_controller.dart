@@ -1,7 +1,9 @@
 import 'dart:typed_data';
+import 'package:carry_you_driver/network/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import '../../model/types_vehicle_response.dart';
 import '../../common/apputills.dart';
 import '../../common/camera_helper.dart';
@@ -37,6 +39,40 @@ class VehicleDetailController extends GetxController implements CameraOnComplete
     super.onInit();
     cameraHelper = CameraHelper(this);
     getTypesOfVehicle();
+    Logger().d("sdfdsgsdgdgsd");
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    if (Get.arguments != null && Get.arguments['from'] == 'edit') {
+      getVehicleDetail();
+    }
+  }
+
+  Future<void> getVehicleDetail() async {
+    var response = await ApiProvider().getProfile();
+    if (response.success == true && response.body != null) {
+      var data = response.body!;
+      vehicleModelController.text = data.vehicleModel ?? "";
+      vehicleColorController.text = data.vehicleColor ?? "";
+      vehicleNumberController.text = data.vehicleNumber ?? "";
+      registrationExpiryController.text = data.registrationExpiryDate ?? "";
+      insuranceExpiryController.text = data.insuranceExpiryDate ?? "";
+
+      if (data.pictureOfVehicle != null && data.pictureOfVehicle.toString().isNotEmpty) {
+        vehicleImage.value = ApiConstants.userImageUrl+data.pictureOfVehicle;
+      }
+      if (data.vehicleRegistrationImage != null && data.vehicleRegistrationImage.toString().isNotEmpty) {
+        registrationImage.value = ApiConstants.userImageUrl+data.vehicleRegistrationImage;
+      }
+      if (data.insurancePolicyImage != null && data.insurancePolicyImage.toString().isNotEmpty) {
+        insuranceImage.value = ApiConstants.userImageUrl+data.insurancePolicyImage;
+      }
+      isPetsAllowed.value = data.petsAllowed == 1;
+      isLargeVehicle.value = data.sixPlusSeats == 1;
+    }
+    update();
   }
 
   @override
@@ -174,12 +210,24 @@ class VehicleDetailController extends GetxController implements CameraOnComplete
       'sixPlusSeats': isLargeVehicle.value ? 1 : 0,
     };
 
-    var response = await ApiProvider().vehicleAddApi(
-      body,
-      vehicleImage.value!,
-      registrationImage.value!,
-      insuranceImage.value!,
-    );
+
+
+    var response;
+    if (Get.arguments != null && Get.arguments['from'] == 'edit') {
+      response = await ApiProvider().vehicleInformationUpdate(
+        body,
+        vehicleImage.value!,
+        registrationImage.value!,
+        insuranceImage.value!,
+      );
+    } else {
+      response = await ApiProvider().vehicleAddApi(
+        body,
+        vehicleImage.value!,
+        registrationImage.value!,
+        insuranceImage.value!,
+      );
+    }
 
     isLoading.value = false;
 

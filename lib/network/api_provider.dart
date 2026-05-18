@@ -14,6 +14,7 @@ import 'package:carry_you_driver/model/withdrawal_history_response.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:logger/logger.dart';
 import 'package:mime_type/mime_type.dart';
+import 'package:path_provider/path_provider.dart';
 import '../common/apputills.dart';
 import '../model/booking_list_response.dart';
 import '../model/profile_response.dart';
@@ -121,19 +122,56 @@ class ApiProvider {
     }
   }
 
+  Future<CommonResponse> forgotPassword(Map<String, dynamic> body) async {
+    Utils.showLoading();
+    ApiRequest apiRequest = ApiRequest(
+      url: ApiConstants.forgotPassword,
+      requestType: RequestType.post,
+      body: body,
+    );
+    try {
+      var response = await _baseClient.handleRequest(apiRequest);
+      Utils.hideLoading();
+      return CommonResponse.fromJson(response);
+    } catch (e) {
+      Utils.hideLoading();
+      final res = (e as dynamic).response;
+      if (res != null) {
+        return CommonResponse.fromJson(res?.data);
+      }
+      return CommonResponse(message: e.toString());
+    }
+  }
+
   Future<LicenseResponse> licenseAddApi(
     Map<String, dynamic> body,
     String licenceFrontImage,
     String licenceBackImage,
   ) async {
     Utils.showLoading();
-    if (licenceFrontImage.isNotEmpty &&
-        !(licenceFrontImage.startsWith("http"))) {
-      body['licenceFrontImage'] = await getMultipart(path: licenceFrontImage);
+
+    if (licenceFrontImage.isNotEmpty) {
+      if (licenceFrontImage.startsWith("http") ||
+          licenceFrontImage.startsWith("/images")) {
+        String url = licenceFrontImage.startsWith("http")
+            ? licenceFrontImage
+            : "${ApiConstants.userImageUrl}$licenceFrontImage";
+        body['licenceFrontImage'] = await getMultipartFromUrl(url: url);
+      } else {
+        body['licenceFrontImage'] = await getMultipart(path: licenceFrontImage);
+      }
     }
 
-    if (licenceBackImage.isNotEmpty && !(licenceBackImage.startsWith("http"))) {
-      body['licenceBackImage'] = await getMultipart(path: licenceBackImage);
+    if (licenceBackImage.isNotEmpty) {
+      if (licenceBackImage.startsWith("http") ||
+          licenceBackImage.startsWith("/images")) {
+        String url = licenceBackImage.startsWith("http")
+            ? licenceBackImage
+            : "${ApiConstants.userImageUrl}$licenceBackImage";
+        body['licenceBackImage'] = await getMultipartFromUrl(url: url);
+      } else {
+        body['licenceBackImage'] = await getMultipart(path: licenceBackImage);
+      }
     }
     ApiRequest apiRequest = ApiRequest(
       url: ApiConstants.licenseDetailAdd,
@@ -201,6 +239,70 @@ class ApiProvider {
     ApiRequest apiRequest = ApiRequest(
       url: ApiConstants.licenseDetailAdd,
       requestType: RequestType.post,
+      body: body,
+    );
+    try {
+      var response = await _baseClient.handleRequest(apiRequest);
+      Utils.hideLoading();
+      return LicenseResponse.fromJson(response);
+    } catch (e) {
+      Utils.hideLoading();
+      final res = (e as dynamic).response;
+      if (res != null) {
+        return LicenseResponse.fromJson(res?.data);
+      }
+      return LicenseResponse(message: e.toString());
+    }
+  }
+
+  Future<LicenseResponse> vehicleInformationUpdate(
+    Map<String, dynamic> body,
+    String pictureOfVehicle,
+    String vehicleRegistrationImage,
+    String insurancePolicyImage,
+  ) async {
+    Utils.showLoading();
+    if (pictureOfVehicle.isNotEmpty) {
+      if (pictureOfVehicle.startsWith("http") ||
+          pictureOfVehicle.startsWith("/images")) {
+        String url = pictureOfVehicle.startsWith("http")
+            ? pictureOfVehicle
+            : "${ApiConstants.userImageUrl}$pictureOfVehicle";
+        body['pictureOfVehicle'] = await getMultipartFromUrl(url: url);
+      } else {
+        body['pictureOfVehicle'] = await getMultipart(path: pictureOfVehicle);
+      }
+    }
+
+    if (vehicleRegistrationImage.isNotEmpty) {
+      if (vehicleRegistrationImage.startsWith("http") ||
+          vehicleRegistrationImage.startsWith("/images")) {
+        String url = vehicleRegistrationImage.startsWith("http")
+            ? vehicleRegistrationImage
+            : "${ApiConstants.userImageUrl}$vehicleRegistrationImage";
+        body['vehicleRegistrationImage'] =
+            await getMultipartFromUrl(url: url);
+      } else {
+        body['vehicleRegistrationImage'] =
+            await getMultipart(path: vehicleRegistrationImage);
+      }
+    }
+
+    if (insurancePolicyImage.isNotEmpty) {
+      if (insurancePolicyImage.startsWith("http") ||
+          insurancePolicyImage.startsWith("/images")) {
+        String url = insurancePolicyImage.startsWith("http")
+            ? insurancePolicyImage
+            : "${ApiConstants.userImageUrl}$insurancePolicyImage";
+        body['insurancePolicyImage'] = await getMultipartFromUrl(url: url);
+      } else {
+        body['insurancePolicyImage'] =
+            await getMultipart(path: insurancePolicyImage);
+      }
+    }
+    ApiRequest apiRequest = ApiRequest(
+      url: ApiConstants.vehicleInformationUpdate,
+      requestType: RequestType.put,
       body: body,
     );
     try {
@@ -1239,6 +1341,16 @@ class ApiProvider {
       return FaqResponse(message: e.toString());
     }
   }*/
+
+  static Future<dio.MultipartFile> getMultipartFromUrl(
+      {required String url}) async {
+    dio.Dio dioClient = dio.Dio();
+    String fileName = url.split('/').last;
+    final tempDir = await getTemporaryDirectory();
+    final tempPath = "${tempDir.path}/$fileName";
+    await dioClient.download(url, tempPath);
+    return await getMultipart(path: tempPath);
+  }
 
   static Future<dio.MultipartFile> getMultipart({required String path}) async {
     String fileName = path.split('/').last;

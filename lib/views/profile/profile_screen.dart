@@ -220,6 +220,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         else if(type == 2){
           Get.toNamed(AppRoutes.vehicleDetail,arguments: {'from':"edit"});
 
+
         }
       },
       child: Container(

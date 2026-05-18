@@ -7,12 +7,14 @@ class ApiConstants {
   // static const String userImageUrl = "http://192.168.1.81:7766";
   static const String placesKey = "AIzaSyAXAv5h2hnQE1QChUPJRCGcEAcYKfOnqgI";
 
+
   static const String signUp = "$_baseUrl/users/signUp";
   static const String otpVerify = "$_baseUrl/users/otpVerify";
   static const String otpResend = "$_baseUrl/users/resendOtp";
   static const String licenseDetailAdd = "$_baseUrl/users/licenceDetailAdd";
   static const String typeOfVehicleList = "$_baseUrl/users/getTypeOfVechileList";
   static const String login = "$_baseUrl/users/login";
+  static const String forgotPassword = "$_baseUrl/users/forgotPassword";
   static const String updateLocation = "$_baseUrl/users/updateUserLocation";
   static const String requestList = "$_baseUrl/users/bookingList";
   static const String bookingAcceptReject = "$_baseUrl/users/bookingAcceptReject";
@@ -28,6 +30,7 @@ class ApiConstants {
   static const String driverHaveItemConfimByDriver = "$_baseUrl/users/driverHaveItemConfimByDriver";
   static const String getUserDetail = "$_baseUrl/users/getUserDetail";
   static const String updateProfile = "$_baseUrl/users/updateProfile";
+  static const String vehicleInformationUpdate = "$_baseUrl/users/vehicleInformationUpdate";
   static const String withdrawAmount = "$_baseUrl/users/withdrawAmount";
   static const String stripeConnect = "$_baseUrl/users/stripeConnect";
   static const String withdrawalHistory = "$_baseUrl/users/withdrawalHistory";

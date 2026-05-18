@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:carry_you_driver/network/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -24,8 +25,38 @@ class LicenseDetailController extends GetxController implements CameraOnComplete
 
   @override
   void onInit() {
+
     super.onInit();
     cameraHelper = CameraHelper(this);
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    if (Get.arguments != null && Get.arguments['from'] == 'edit') {
+      getLicenseDetail();
+    }
+  }
+
+  Future<void> getLicenseDetail() async {
+    var response = await ApiProvider().getProfile();
+    if (response.success == true && response.body != null) {
+      var data = response.body!;
+      licenseNoController.text = data.driversLicenseNumber ?? "";
+      issuedOnController.text = data.issuedOn ?? "";
+      licenseTypeController.text = data.licenceType ?? "";
+      dobController.text = data.dob ?? "";
+      nationalityController.text = data.nationality ?? "";
+      expiryController.text = data.expiryDate ?? "";
+      
+      if (data.licenceFrontImage != null && data.licenceFrontImage.toString().isNotEmpty) {
+        licenseFront.value = ApiConstants.userImageUrl+data.licenceFrontImage;
+      }
+      if (data.licenceBackImage != null && data.licenceBackImage.toString().isNotEmpty) {
+        licenseBack.value = ApiConstants.userImageUrl+data.licenceBackImage;
+      }
+      update();
+    }
   }
 
   @override

@@ -1,4 +1,6 @@
+import 'package:carry_you_driver/controller/license_detail_controller.dart';
 import 'package:carry_you_driver/controller/ride_detail_controller.dart';
+import 'package:carry_you_driver/controller/vehicle_detail_controller.dart';
 import 'package:get/get.dart';
 import '../controller/activity_controller.dart';
 import '../controller/common_controller.dart';
@@ -37,6 +39,20 @@ class RideDetailBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => RideDetailController());
+  }
+}
+
+class LicenseDetailBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => LicenseDetailController());
+  }
+}
+
+class VehicleDetailBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => VehicleDetailController());
   }
 }
 

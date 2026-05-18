@@ -196,9 +196,17 @@ class AppPages {
 
     GetPage(name: AppRoutes.instructorDetail, page: () => InstructorDetail()),
 
-    GetPage(name: AppRoutes.licenseDetail, page: () => LicenseDetailScreen()),
+    GetPage(
+      name: AppRoutes.licenseDetail,
+      page: () => LicenseDetailScreen(),
+      binding: LicenseDetailBinding(),
+    ),
 
-    GetPage(name: AppRoutes.vehicleDetail, page: () => VehicleDetailScreen()),
+    GetPage(
+      name: AppRoutes.vehicleDetail,
+      page: () => VehicleDetailScreen(),
+      binding: VehicleDetailBinding(),
+    ),
 
     GetPage(name: AppRoutes.homeScreen, page: () => HomeScreen()),
 

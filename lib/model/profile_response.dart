@@ -69,6 +69,10 @@ class ProfileBody {
       this.insurancePolicyImage, 
       this.insuranceExpiryDate, 
       this.vehicleNumber, 
+      this.vehicleModel,
+      this.vehicleColor,
+      this.petsAllowed,
+      this.sixPlusSeats,
       this.resetToken, 
       this.resetTokenExpires, 
       this.deviceToken, 
@@ -114,6 +118,10 @@ class ProfileBody {
     insurancePolicyImage = json['insurancePolicyImage'];
     insuranceExpiryDate = json['insuranceExpiryDate'];
     vehicleNumber = json['vehicleNumber'];
+    vehicleModel = json['vehicleModel'];
+    vehicleColor = json['vehicleColor'];
+    petsAllowed = json['petsAllowed'];
+    sixPlusSeats = json['sixPlusSeats'];
     resetToken = json['resetToken'];
     resetTokenExpires = json['resetTokenExpires'];
     deviceToken = json['deviceToken'];
@@ -158,6 +166,10 @@ class ProfileBody {
   dynamic insurancePolicyImage;
   dynamic insuranceExpiryDate;
   dynamic vehicleNumber;
+  dynamic vehicleModel;
+  dynamic vehicleColor;
+  int? petsAllowed;
+  int? sixPlusSeats;
   dynamic resetToken;
   dynamic resetTokenExpires;
   String? deviceToken;
@@ -204,6 +216,10 @@ class ProfileBody {
     map['insurancePolicyImage'] = insurancePolicyImage;
     map['insuranceExpiryDate'] = insuranceExpiryDate;
     map['vehicleNumber'] = vehicleNumber;
+    map['vehicleModel'] = vehicleModel;
+    map['vehicleColor'] = vehicleColor;
+    map['petsAllowed'] = petsAllowed;
+    map['sixPlusSeats'] = sixPlusSeats;
     map['resetToken'] = resetToken;
     map['resetTokenExpires'] = resetTokenExpires;
     map['deviceToken'] = deviceToken;

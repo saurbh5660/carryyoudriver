@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import '../../network/api_constants.dart';
 import '../../common/textform_field.dart';
 import '../../controller/license_detail_controller.dart';
 
@@ -15,6 +16,7 @@ class LicenseDetailScreen extends StatefulWidget {
 
 class _LicenseDetailScreenState extends State<LicenseDetailScreen> {
   final LicenseDetailController controller = Get.put(LicenseDetailController());
+
 
   // Helper to handle date selection with logic for DOB (18+ years)
   Future<void> _selectDate(BuildContext context, TextEditingController textController, {bool isDOB = false}) async {
@@ -65,85 +67,89 @@ class _LicenseDetailScreenState extends State<LicenseDetailScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          child: Form(
-            key: controller.formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildLabel("Licence Photos"),
-                const SizedBox(height: 12),
-                Row(
+          child: GetBuilder<LicenseDetailController>(
+            builder: (controller) {
+              return Form(
+                key: controller.formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildUploadBox("Front Side", controller.licenseFront, 1),
-                    const SizedBox(width: 16),
-                    _buildUploadBox("Back Side", controller.licenseBack, 2),
+                    _buildLabel("Licence Photos"),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        _buildUploadBox("Front Side", controller.licenseFront, 1),
+                        const SizedBox(width: 16),
+                        _buildUploadBox("Back Side", controller.licenseBack, 2),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+
+                    _buildField(
+                        "Licence Number",
+                        controller.licenseNoController,
+                        "Enter license number",
+                        validator: (v) => (v == null || v.isEmpty) ? "License number is required" : null
+                    ),
+
+                    _buildField(
+                        "Issued on",
+                        controller.issuedOnController,
+                        "Select Date",
+                        isDatePicker: true
+                    ),
+
+                    _buildLicenseTypeDropdown(),
+
+                    _buildField(
+                        "Date of Birth",
+                        controller.dobController,
+                        "Select Date",
+                        isDatePicker: true,
+                        isDOB: true
+                    ),
+
+                    _buildField(
+                        "Nationality",
+                        controller.nationalityController,
+                        "Enter nationality",
+                        validator: (v) {
+                          if (v == null || v.isEmpty) return "Nationality is required";
+                          if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(v)) return "Enter a valid nationality";
+                          return null;
+                        }
+                    ),
+
+                    _buildField(
+                        "Expiry Date",
+                        controller.expiryController,
+                        "Select Date",
+                        isDatePicker: true
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => controller.submitLicenseData(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+                        ),
+                        child: Text(
+                          Get.arguments?['from'] == 'edit' ? 'Update' : 'Next',
+                          style: GoogleFonts.montserrat(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
-                const SizedBox(height: 24),
-
-                _buildField(
-                    "Licence Number",
-                    controller.licenseNoController,
-                    "Enter license number",
-                    validator: (v) => (v == null || v.isEmpty) ? "License number is required" : null
-                ),
-
-                _buildField(
-                    "Issued on",
-                    controller.issuedOnController,
-                    "Select Date",
-                    isDatePicker: true
-                ),
-
-                _buildLicenseTypeDropdown(),
-
-                _buildField(
-                    "Date of Birth",
-                    controller.dobController,
-                    "Select Date",
-                    isDatePicker: true,
-                    isDOB: true
-                ),
-
-                _buildField(
-                    "Nationality",
-                    controller.nationalityController,
-                    "Enter nationality",
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return "Nationality is required";
-                      if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(v)) return "Enter a valid nationality";
-                      return null;
-                    }
-                ),
-
-                _buildField(
-                    "Expiry Date",
-                    controller.expiryController,
-                    "Select Date",
-                    isDatePicker: true
-                ),
-
-                const SizedBox(height: 30),
-
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => controller.submitLicenseData(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-                    ),
-                    child: Text(
-                      Get.arguments?['from'] == 'edit' ? 'Update' : 'Next',
-                      style: GoogleFonts.montserrat(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
+              );
+            }
           ),
         ),
       ),
@@ -234,7 +240,6 @@ class _LicenseDetailScreenState extends State<LicenseDetailScreen> {
             border: Border.all(color: imagePath.value == null ? Colors.grey.shade300 : Colors.black),
             borderRadius: BorderRadius.circular(12)
         ),
-
         child: imagePath.value == null
             ? Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -244,9 +249,40 @@ class _LicenseDetailScreenState extends State<LicenseDetailScreen> {
             Text(label, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade400, fontSize: 10))
           ],
         )
-            : ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.file(File(imagePath.value!), fit: BoxFit.cover)),
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: _buildImageWidget(imagePath.value!),
+              ),
       ),
     ));
+  }
+
+  Widget _buildImageWidget(String path) {
+    if (path.isEmpty) return const Icon(Icons.error);
+
+    if (path.startsWith('http')) {
+      return Image.network(
+        path,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+      );
+    } else if (path.startsWith('/images') || path.startsWith('images')) {
+      String fullUrl = path.startsWith('/') ? "${ApiConstants.userImageUrl}$path" : "${ApiConstants.userImageUrl}/$path";
+      return Image.network(
+        fullUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+      );
+    } else if (File(path).existsSync()) {
+      return Image.file(File(path), fit: BoxFit.cover);
+    } else {
+      String fullUrl = path.startsWith('/') ? "${ApiConstants.userImageUrl}$path" : "${ApiConstants.userImageUrl}/$path";
+      return Image.network(
+        fullUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+      );
+    }
   }
 
   Widget _buildLabel(String text) {
