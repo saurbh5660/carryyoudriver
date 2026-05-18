@@ -23,26 +23,26 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   @override
   void initState() {
     super.initState();
-    fetchPackages();
+   // fetchPackages();
     // controller.getUserSubscription();
   }
 
-  Future<void> fetchPackages() async {
-    try {
-      final offerings = await PurchaseApi.fetchOffers();
-
-      if (offerings.isNotEmpty) {
-        packages = offerings.first.availablePackages;
-      }
-      log("Packages length: ${packages.length}");
-    } catch (e, s) {
-      log("fetchPackages error: $e", stackTrace: s);
-    }
-    // await controller.getUserSubscription();
-    setState(() {
-      isLoading = false;
-    });
-  }
+  // Future<void> fetchPackages() async {
+  //   try {
+  //     final offerings = await PurchaseApi.fetchOffers();
+  //
+  //     if (offerings.isNotEmpty) {
+  //       packages = offerings.first.availablePackages;
+  //     }
+  //     log("Packages length: ${packages.length}");
+  //   } catch (e, s) {
+  //     log("fetchPackages error: $e", stackTrace: s);
+  //   }
+  //   // await controller.getUserSubscription();
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -138,13 +138,13 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     bool isPremiumSelected = selectedPlanIndex == 1;
 
     if (isPremiumSelected) {
-      if (packages.isNotEmpty) {
-        await PurchaseApi.buyPlan(
-          package: packages.first,
-          screenType: "1",
-          timeDuration: "2",
-        );
-      }
+      // if (packages.isNotEmpty) {
+      //   await PurchaseApi.buyPlan(
+      //     package: packages.first,
+      //     screenType: "1",
+      //     timeDuration: "2",
+      //   );
+      // }
     } else {
       // if ((Get.arguments?["from"] ?? "") == "signup") {
       //   controller.updateFreeSubscription();
