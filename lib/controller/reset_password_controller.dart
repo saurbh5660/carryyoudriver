@@ -27,6 +27,7 @@ class ResetPasswordController extends GetxController {
       Get.back();
       Utils.showSuccessToast(message: response.message ?? "OTP sent successfully.");
 
+
     } else {
       Utils.showErrorToast(message: response.message ?? "Something went wrong.");
     }
