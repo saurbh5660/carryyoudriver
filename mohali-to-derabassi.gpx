@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="driver-location-test">
+  <!-- Approx route: Mohali Tower / Mohali area to Dera Bassi, Punjab -->
+  <wpt lat="30.7046" lon="76.7179">
+    <name>Mohali Start</name>
+    <time>2026-07-06T12:00:00Z</time>
+  </wpt>
+  <wpt lat="30.6985" lon="76.7350">
+    <name>Mohali Sector 82 Side</name>
+    <time>2026-07-06T12:00:15Z</time>
+  </wpt>
+  <wpt lat="30.6905" lon="76.7542">
+    <name>Aerocity Road</name>
+    <time>2026-07-06T12:00:30Z</time>
+  </wpt>
+  <wpt lat="30.6748" lon="76.7801">
+    <name>Airport Road Towards Zirakpur</name>
+    <time>2026-07-06T12:00:45Z</time>
+  </wpt>
+  <wpt lat="30.6560" lon="76.8083">
+    <name>Zirakpur Side</name>
+    <time>2026-07-06T12:01:00Z</time>
+  </wpt>
+  <wpt lat="30.6358" lon="76.8264">
+    <name>Ambala Chandigarh Highway</name>
+    <time>2026-07-06T12:01:15Z</time>
+  </wpt>
+  <wpt lat="30.6123" lon="76.8380">
+    <name>Dera Bassi Approach</name>
+    <time>2026-07-06T12:01:30Z</time>
+  </wpt>
+  <wpt lat="30.5887" lon="76.8427">
+    <name>Dera Bassi Destination</name>
+    <time>2026-07-06T12:01:45Z</time>
+  </wpt>
+</gpx>
