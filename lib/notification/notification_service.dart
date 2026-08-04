@@ -13,12 +13,12 @@ import '../routes/app_routes.dart';
 
 class NotificationService {
   static final NotificationService _notificationService =
-  NotificationService._internal();
+      NotificationService._internal();
   factory NotificationService() => _notificationService;
   NotificationService._internal();
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
   bool _localNotificationsInitialized = false;
 
   AndroidNotificationChannel channel = const AndroidNotificationChannel(
@@ -65,18 +65,18 @@ class NotificationService {
     if (_localNotificationsInitialized) return;
 
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('ic_launcher_foreground');
+        AndroidInitializationSettings('ic_launcher_foreground');
     const DarwinInitializationSettings initializationSettingsIOS =
-    DarwinInitializationSettings();
+        DarwinInitializationSettings();
 
     const InitializationSettings initializationSettings =
-    InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsIOS,
+        );
 
     await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
+      settings: initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) {
         if (response.payload != null) {
           try {
@@ -93,7 +93,8 @@ class NotificationService {
 
     final androidImpl = flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+          AndroidFlutterLocalNotificationsPlugin
+        >();
     await androidImpl?.createNotificationChannel(channel);
     await androidImpl?.createNotificationChannel(type1Channel);
     _localNotificationsInitialized = true;
@@ -101,17 +102,13 @@ class NotificationService {
 
   Future<void> _requestFullPermissions() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
-    await messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    await messaging.requestPermission(alert: true, badge: true, sound: true);
 
     if (GetPlatform.isAndroid) {
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-      >()
+            AndroidFlutterLocalNotificationsPlugin
+          >()
           ?.requestNotificationsPermission();
     }
 
@@ -126,11 +123,12 @@ class NotificationService {
   /// muted (e.g. the chat screen), and `true` again when they leave.
   Future<void> setIosForegroundAlertsEnabled(bool enabled) async {
     if (!GetPlatform.isIOS) return;
-    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-      alert: enabled,
-      badge: enabled,
-      sound: enabled,
-    );
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+          alert: enabled,
+          badge: enabled,
+          sound: enabled,
+        );
   }
 
   Future<bool> checkInitialMessage() async {
@@ -143,7 +141,8 @@ class NotificationService {
 
     if (GetPlatform.isAndroid) {
       final NotificationAppLaunchDetails? details =
-      await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+          await flutterLocalNotificationsPlugin
+              .getNotificationAppLaunchDetails();
       if (details?.didNotificationLaunchApp ?? false) {
         String? payload = details!.notificationResponse?.payload;
         if (payload != null) {
@@ -157,49 +156,59 @@ class NotificationService {
   }
 
   void initFirebaseListeners() {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      try {
-        debugPrint("NOTIFICATION_TRACE foreground message start");
-        debugPrint("Foreground notification Received title: ${message.notification?.title}");
-        debugPrint("Foreground notification Received body: ${message.notification?.body}");
-        debugPrint("Foreground Data Received: ${message.data}");
+    FirebaseMessaging.onMessage.listen(
+      (RemoteMessage message) {
+        try {
+          debugPrint("NOTIFICATION_TRACE foreground message start");
+          debugPrint(
+            "Foreground notification Received title: ${message.notification?.title}",
+          );
+          debugPrint(
+            "Foreground notification Received body: ${message.notification?.body}",
+          );
+          debugPrint("Foreground Data Received: ${message.data}");
 
-        if (GetPlatform.isIOS) {
-          debugPrint("NOTIFICATION_TRACE iOS foreground handled by APNs");
-          return;
-        }
+          if (GetPlatform.isIOS) {
+            debugPrint("NOTIFICATION_TRACE iOS foreground handled by APNs");
+            return;
+          }
 
-        if (Get.currentRoute == AppRoutes.chatScreen &&
-            message.data['type'] == "12") {
-          debugPrint("Chat open -> suppress notification");
-          return;
-        }
+          if (Get.currentRoute == AppRoutes.chatScreen &&
+              message.data['type'] == "12") {
+            debugPrint("Chat open -> suppress notification");
+            return;
+          }
 
-        if (DbHelper().getUserToken() != null) {
-          unawaited(showNotifications(message));
+          if (DbHelper().getUserToken() != null) {
+            unawaited(showNotifications(message));
+          }
+          debugPrint("NOTIFICATION_TRACE foreground message complete");
+        } catch (e, stackTrace) {
+          debugPrint("Foreground notification listener failed: $e");
+          debugPrintStack(stackTrace: stackTrace);
         }
-        debugPrint("NOTIFICATION_TRACE foreground message complete");
-      } catch (e, stackTrace) {
-        debugPrint("Foreground notification listener failed: $e");
+      },
+      onError: (Object error, StackTrace stackTrace) {
+        debugPrint("FirebaseMessaging.onMessage stream error: $error");
         debugPrintStack(stackTrace: stackTrace);
-      }
-    }, onError: (Object error, StackTrace stackTrace) {
-      debugPrint("FirebaseMessaging.onMessage stream error: $error");
-      debugPrintStack(stackTrace: stackTrace);
-    });
+      },
+    );
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      try {
-        debugPrint("Notification Tapped (Background): ${message.data}");
-        handleNavigation(message.data);
-      } catch (e, stackTrace) {
-        debugPrint("Notification tap handler failed: $e");
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (RemoteMessage message) {
+        try {
+          debugPrint("Notification Tapped (Background): ${message.data}");
+          handleNavigation(message.data);
+        } catch (e, stackTrace) {
+          debugPrint("Notification tap handler failed: $e");
+          debugPrintStack(stackTrace: stackTrace);
+        }
+      },
+      onError: (Object error, StackTrace stackTrace) {
+        debugPrint("FirebaseMessaging.onMessageOpenedApp stream error: $error");
         debugPrintStack(stackTrace: stackTrace);
-      }
-    }, onError: (Object error, StackTrace stackTrace) {
-      debugPrint("FirebaseMessaging.onMessageOpenedApp stream error: $error");
-      debugPrintStack(stackTrace: stackTrace);
-    });
+      },
+    );
   }
 
   Future<void> showNotifications(RemoteMessage message) async {
@@ -210,23 +219,26 @@ class NotificationService {
 
       int id = Random().nextInt(900) + 10;
       String payloadData = jsonEncode(message.data);
-      String title = message.data['title']?.toString() ??
+      String title =
+          message.data['title']?.toString() ??
           message.notification?.title ??
           "CarryU";
-      String body = message.data['message']?.toString() ??
+      String body =
+          message.data['message']?.toString() ??
           message.notification?.body ??
           "";
 
       // type "1" gets its own channel + custom sound.
       final bool isType1 = message.data['type']?.toString() == "1";
-      final AndroidNotificationChannel activeChannel =
-          isType1 ? type1Channel : channel;
+      final AndroidNotificationChannel activeChannel = isType1
+          ? type1Channel
+          : channel;
 
       await flutterLocalNotificationsPlugin.show(
-        id,
-        title,
-        body,
-        NotificationDetails(
+        id: id,
+        title: title,
+        body: body,
+        notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(
             activeChannel.id,
             activeChannel.name,
@@ -259,9 +271,9 @@ class NotificationService {
   }
 
   void handleNavigation(
-      Map<String, dynamic> data, {
-        bool isColdStart = false,
-      }) async {
+    Map<String, dynamic> data, {
+    bool isColdStart = false,
+  }) async {
     debugPrint("Navigating with Map Data: $data");
 
     String type = data['type']?.toString() ?? "";
@@ -279,14 +291,16 @@ class NotificationService {
 
     switch (type) {
       case "12":
-        navigate(AppRoutes.chatScreen, args: {'id': senderId,"name":name,"image":profilePic});
+        navigate(
+          AppRoutes.chatScreen,
+          args: {'id': senderId, "name": name, "image": profilePic},
+        );
         break;
       case "1":
-          navigate(AppRoutes.homeScreen);
-          break;
+        navigate(AppRoutes.homeScreen);
+        break;
       default:
         navigate(AppRoutes.notificationScreen);
     }
   }
-
 }

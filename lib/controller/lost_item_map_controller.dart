@@ -16,7 +16,8 @@ import '../generated/assets.dart';
 import '../model/lost_item_request_detail_response.dart';
 import '../routes/app_routes.dart';
 
-class LostItemMapController extends GetxController implements SocketListener, LocationListener {
+class LostItemMapController extends GetxController
+    implements SocketListener, LocationListener {
   final SocketService socketService = SocketService();
   Rx<LostItemRequestDetail> requestBody = Rx(LostItemRequestDetail());
   late GoogleMapController mapController;
@@ -32,8 +33,10 @@ class LostItemMapController extends GetxController implements SocketListener, Lo
   RxDouble heading = 0.0.obs;
 
   LatLng get dropOffLatLng {
-    double lat = double.tryParse(requestBody.value.dropLatitude ?? "0.0") ?? 0.0;
-    double lng = double.tryParse(requestBody.value.dropLongitude ?? "0.0") ?? 0.0;
+    double lat =
+        double.tryParse(requestBody.value.dropLatitude ?? "0.0") ?? 0.0;
+    double lng =
+        double.tryParse(requestBody.value.dropLongitude ?? "0.0") ?? 0.0;
     return LatLng(lat, lng);
   }
 
@@ -63,16 +66,19 @@ class LostItemMapController extends GetxController implements SocketListener, Lo
       targetHeight: targetWidth.toInt(),
     );
     ui.FrameInfo fi = await codec.getNextFrame();
-    final bytes = (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+    final bytes = (await fi.image.toByteData(
+      format: ui.ImageByteFormat.png,
+    ))!.buffer.asUint8List();
     return BitmapDescriptor.fromBytes(bytes);
   }
 
   void startLocation() {
     locationService.startLocationUpdates();
   }
+
   Future<void> getRequestDetail() async {
     final Map<String, dynamic> map = {
-      "lostItemId": Get.arguments?["requestId"] ?? ""
+      "lostItemId": Get.arguments?["requestId"] ?? "",
     };
     var response = await ApiProvider().lostItemRequestDetail(map, true);
     if (response.success == true) {
@@ -82,18 +88,24 @@ class LostItemMapController extends GetxController implements SocketListener, Lo
   }
 
   Future<void> fetchRoute() async {
-    PolylinePoints polylinePoints = PolylinePoints();
+    PolylinePoints polylinePoints = PolylinePoints(
+      apiKey: ApiConstants.placesKey,
+    );
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      googleApiKey: ApiConstants.placesKey,
       request: PolylineRequest(
         origin: PointLatLng(latitude.value, longitude.value),
-        destination: PointLatLng(dropOffLatLng.latitude, dropOffLatLng.longitude),
+        destination: PointLatLng(
+          dropOffLatLng.latitude,
+          dropOffLatLng.longitude,
+        ),
         mode: TravelMode.driving,
       ),
     );
 
     if (result.points.isNotEmpty) {
-      List<LatLng> coords = result.points.map((p) => LatLng(p.latitude, p.longitude)).toList();
+      List<LatLng> coords = result.points
+          .map((p) => LatLng(p.latitude, p.longitude))
+          .toList();
       polylines.value = {
         Polyline(
           polylineId: const PolylineId("lost_item_route"),
@@ -170,6 +182,7 @@ class LostItemMapController extends GetxController implements SocketListener, Lo
     // updateAddressFromLocation(position.latitude, position.longitude);
     // }
   }
+
   void updateMapRoute() {
     // LatLng driverPos = LatLng(latitude.value, longitude.value);
     polylines.clear();
@@ -182,5 +195,4 @@ class LostItemMapController extends GetxController implements SocketListener, Lo
     locationService.stopLocationUpdates();
     super.onClose();
   }
-
 }
