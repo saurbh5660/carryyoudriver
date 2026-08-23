@@ -957,4 +957,125 @@ class ApiProvider {
       contentType: MediaType(mimee ?? 'image', type ?? 'jpeg'),
     );
   }
+
+  Future<CommonResponse> submitLegalAcceptance(Map<String, dynamic> body) async {
+    Utils.showLoading();
+    ApiRequest apiRequest = ApiRequest(
+      url: ApiConstants.legalAcceptanceAdd,
+      requestType: RequestType.postRaw,
+      body: body,
+    );
+    try {
+      var response = await _baseClient.handleRequest(apiRequest);
+      Utils.hideLoading();
+      return CommonResponse.fromJson(response);
+    } catch (e) {
+      Utils.hideLoading();
+      final res = (e as dynamic).response;
+      if (res != null) {
+        return CommonResponse.fromJson(res?.data);
+      }
+      return CommonResponse(success: false, message: e.toString());
+    }
+  }
+
+  Future<CommonResponse> getCmsContent(String type) async {
+    Utils.showLoading();
+    ApiRequest apiRequest = ApiRequest(
+      url: "${ApiConstants.getCmsContent}?type=$type",
+      requestType: RequestType.get,
+    );
+    try {
+      var response = await _baseClient.handleRequest(apiRequest);
+      Utils.hideLoading();
+      return CommonResponse.fromJson(response);
+    } catch (e) {
+      Utils.hideLoading();
+      final res = (e as dynamic).response;
+      if (res != null) {
+        return CommonResponse.fromJson(res?.data);
+      }
+      return CommonResponse(success: false, message: e.toString());
+    }
+  }
+
+  Future<CommonResponse> getDriverTermsPdf() async {
+    Utils.showLoading();
+    ApiRequest apiRequest = ApiRequest(
+      url: ApiConstants.getDriverTermsPdf,
+      requestType: RequestType.get,
+    );
+    try {
+      var response = await _baseClient.handleRequest(apiRequest);
+      Utils.hideLoading();
+      return CommonResponse.fromJson(response);
+    } catch (e) {
+      Utils.hideLoading();
+      final res = (e as dynamic).response;
+      if (res != null) {
+        return CommonResponse.fromJson(res?.data);
+      }
+      return CommonResponse(success: false, message: e.toString());
+    }
+  }
+
+  Future<CommonResponse> getPrivacyPolicyPdf() async {
+    Utils.showLoading();
+    ApiRequest apiRequest = ApiRequest(
+      url: ApiConstants.getPrivacyPolicyPdf,
+      requestType: RequestType.get,
+    );
+    try {
+      var response = await _baseClient.handleRequest(apiRequest);
+      Utils.hideLoading();
+      return CommonResponse.fromJson(response);
+    } catch (e) {
+      Utils.hideLoading();
+      final res = (e as dynamic).response;
+      if (res != null) {
+        return CommonResponse.fromJson(res?.data);
+      }
+      return CommonResponse(success: false, message: e.toString());
+    }
+  }
+
+  Future<CommonResponse> sendDriverTermsEmail() async {
+    Utils.showLoading();
+    ApiRequest apiRequest = ApiRequest(
+      url: ApiConstants.sendDriverTermsEmail,
+      requestType: RequestType.post,
+    );
+    try {
+      var response = await _baseClient.handleRequest(apiRequest);
+      Utils.hideLoading();
+      return CommonResponse.fromJson(response);
+    } catch (e) {
+      Utils.hideLoading();
+      final res = (e as dynamic).response;
+      if (res != null) {
+        return CommonResponse.fromJson(res?.data);
+      }
+      return CommonResponse(success: false, message: e.toString());
+    }
+  }
+
+  Future<CommonResponse> sendPrivacyPolicyEmail() async {
+    Utils.showLoading();
+    ApiRequest apiRequest = ApiRequest(
+      url: ApiConstants.sendPrivacyPolicyEmail,
+      requestType: RequestType.post,
+    );
+    try {
+      var response = await _baseClient.handleRequest(apiRequest);
+      Utils.hideLoading();
+      return CommonResponse.fromJson(response);
+    } catch (e) {
+      Utils.hideLoading();
+      final res = (e as dynamic).response;
+      if (res != null) {
+        return CommonResponse.fromJson(res?.data);
+      }
+      return CommonResponse(success: false, message: e.toString());
+    }
+  }
 }

@@ -37,6 +37,7 @@ class ProfileBody {
       this.role, 
       this.adminApprovalStatus, 
       this.isNotificationOnOff, 
+      this.accepted,
       this.fullName, 
       this.email, 
       this.countryCode, 
@@ -86,6 +87,7 @@ class ProfileBody {
     role = json['role'];
     adminApprovalStatus = json['adminApprovalStatus'];
     isNotificationOnOff = json['isNotificationOnOff'];
+    accepted = json['accepted'];
     fullName = json['fullName'];
     email = json['email'];
     countryCode = json['countryCode'];
@@ -134,6 +136,7 @@ class ProfileBody {
   int? role;
   int? adminApprovalStatus;
   int? isNotificationOnOff;
+  dynamic accepted;
   String? fullName;
   String? email;
   String? countryCode;
@@ -184,6 +187,7 @@ class ProfileBody {
     map['role'] = role;
     map['adminApprovalStatus'] = adminApprovalStatus;
     map['isNotificationOnOff'] = isNotificationOnOff;
+    map['accepted'] = accepted;
     map['fullName'] = fullName;
     map['email'] = email;
     map['countryCode'] = countryCode;

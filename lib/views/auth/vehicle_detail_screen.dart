@@ -101,12 +101,7 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    _buildField(
-                        "Vehicle Color",
-                        controller.vehicleColorController,
-                        "e.g., Metallic Silver",
-                        validator: (v) => v!.isEmpty ? "Please enter vehicle color" : null
-                    ),
+                    _buildVehicleColorDropdown(),
                     const SizedBox(height: 20),
                     _buildField("Vehicle Number", controller.vehicleNumberController, "e.g., ABC-1234",
                         validator: (v) => v!.isEmpty ? "Please enter vehicle number" : null),
@@ -164,6 +159,58 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
       }).toList(),
       onChanged: (newValue) => controller.selectedVehicleType.value = newValue,
     ));
+  }
+
+  static const List<String> _carColors = [
+    "Black",
+    "White",
+    "Silver",
+    "Gray",
+    "Red",
+    "Blue",
+    "Navy",
+    "Green",
+    "Brown",
+    "Gold",
+    "Yellow",
+    "Orange",
+    "Beige",
+    "Other",
+  ];
+
+  Widget _buildVehicleColorDropdown() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLabel("Vehicle Color"),
+        DropdownButtonFormField<String>(
+          value: _carColors.contains(controller.vehicleColorController.text)
+              ? controller.vehicleColorController.text
+              : null,
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(28), borderSide: BorderSide(color: Colors.grey.shade300)),
+            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(28), borderSide: BorderSide(color: Colors.grey.shade300)),
+            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(28), borderSide: const BorderSide(color: Colors.black)),
+          ),
+          hint: Text("Select Vehicle Color", style: TextStyle(color: Colors.grey.shade400, fontSize: 14)),
+          icon: const Icon(Icons.keyboard_arrow_down, color: Colors.black),
+          validator: (value) => (value == null || value.isEmpty) ? "Please select vehicle color" : null,
+          items: _carColors.map((String color) {
+            return DropdownMenuItem<String>(
+              value: color,
+              child: Text(color, style: GoogleFonts.montserrat(fontSize: 14, color: Colors.black)),
+            );
+          }).toList(),
+          onChanged: (newValue) {
+            if (newValue != null) {
+              controller.vehicleColorController.text = newValue;
+              setState(() {});
+            }
+          },
+        ),
+      ],
+    );
   }
 
   Widget _buildField(String title, TextEditingController ctr, String hint, {bool isDate = false, bool hasCalendarIcon = false, String? Function(String?)? validator}) {
@@ -313,4 +360,5 @@ class _VehicleDetailScreenState extends State<VehicleDetailScreen> {
       barrierDismissible: false,
     );
   }
+
 }

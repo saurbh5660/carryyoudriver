@@ -84,6 +84,11 @@ class CommonController extends GetxController {
         );
         return;
       }
+      else if (response.body?.accepted != 1 && response.body?.accepted != true) {
+        Get.offAllNamed(AppRoutes.driverWelcome);
+        return;
+      }
+
       else if ((response.body?.adminApprovalStatus != 1)) {
         Utils.showErrorToast(message: "Account verification is pending from admin");
         return;

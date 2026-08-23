@@ -13,6 +13,12 @@ import '../views/auth/splash_screen.dart';
 import '../views/auth/subscription_buy_screen.dart';
 import '../views/auth/vehicle_detail_screen.dart';
 import '../views/auth/verification_screen.dart';
+import '../views/auth/driver_welcome_screen.dart';
+import '../views/auth/driver_terms_screen.dart';
+import '../views/auth/driver_privacy_screen.dart';
+import '../views/auth/distracted_driving_screen.dart';
+import '../views/auth/driver_esignature_screen.dart';
+import '../views/auth/driver_success_screen.dart';
 import '../views/chat/chat_screen.dart';
 import '../views/chat/message_screen.dart';
 import '../views/dashboard/dashboard_screen.dart';
@@ -70,6 +76,7 @@ class AppPages {
       name: AppRoutes.onboardingView,
       page: () => const OnboardingScreen(),
     ),
+
 
     GetPage(
       name: AppRoutes.loginView,
@@ -251,5 +258,12 @@ class AppPages {
       name: AppRoutes.ratingScreen,
       page: () => RatingScreen(),
     ),
+
+    GetPage(name: AppRoutes.driverWelcome, page: () => const DriverWelcomeScreen()),
+    GetPage(name: AppRoutes.driverTerms, page: () => const DriverTermsScreen()),
+    GetPage(name: AppRoutes.driverPrivacy, page: () => const DriverPrivacyScreen()),
+    GetPage(name: AppRoutes.distractedDriving, page: () => const DistractedDrivingScreen()),
+    GetPage(name: AppRoutes.driverEsignature, page: () => const DriverEsignatureScreen()),
+    GetPage(name: AppRoutes.driverSuccess, page: () => const DriverSuccessScreen()),
   ];
 }

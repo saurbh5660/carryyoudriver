@@ -40,6 +40,10 @@ class ApiConstants {
   static const String logout = "$_baseUrl/users/logout";
   static const String sendNotificationToUserWhenDriverIsNearBy = "$_baseUrl/users/sendNotificationToUserWhenDriverIsNearBy";
   static const String callCustomer = "$_baseUrl/users/callCustomer";
-
-
+  static const String getDriverTermsPdf = "$_baseUrl/users/getDriverTermsPdf";
+  static const String getPrivacyPolicyPdf = "$_baseUrl/users/getPrivacyPolicyPdf";
+  static const String sendDriverTermsEmail = "$_baseUrl/users/sendDriverTermsEmail";
+  static const String sendPrivacyPolicyEmail = "$_baseUrl/users/sendPrivacyPolicyEmail";
+  static const String legalAcceptanceAdd = "$_baseUrl/users/legalAcceptanceAdd";
+  static const String getCmsContent = "$_baseUrl/users/getCmsContent";
 }

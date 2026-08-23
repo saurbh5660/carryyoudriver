@@ -63,4 +63,11 @@ class AppRoutes{
   static const lostItemMapScreen = '/lostItemMapScreen';
   static const ratingScreen = '/ratingScreen';
 
+  // Driver Legal Acceptance Routes (D-1 to D-6)
+  static const driverWelcome = '/driverWelcome';
+  static const driverTerms = '/driverTerms';
+  static const driverPrivacy = '/driverPrivacy';
+  static const distractedDriving = '/distractedDriving';
+  static const driverEsignature = '/driverEsignature';
+  static const driverSuccess = '/driverSuccess';
 }
