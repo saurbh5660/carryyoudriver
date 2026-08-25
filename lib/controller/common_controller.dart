@@ -84,7 +84,7 @@ class CommonController extends GetxController {
         );
         return;
       }
-      else if (response.body?.accepted != 1 && response.body?.accepted != true) {
+      else if (response.body?.esignatureAccepted != "1") {
         Get.offAllNamed(AppRoutes.driverWelcome);
         return;
       }

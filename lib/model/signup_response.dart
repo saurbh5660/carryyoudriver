@@ -37,7 +37,7 @@ class Body {
       this.role, 
       this.adminApprovalStatus, 
       this.isNotificationOnOff, 
-      this.accepted,
+      this.esignatureAccepted,
       this.fullName, 
       this.email, 
       this.countryCode, 
@@ -122,7 +122,7 @@ class Body {
     deviceType = json['deviceType'];
     socketId = json['socketId'];
     token = json['token'];
-    accepted = json['accepted'];
+    esignatureAccepted = json['esignatureAccepted'];
   }
   String? id;
   String? createdAt;
@@ -130,7 +130,7 @@ class Body {
   int? role;
   int? adminApprovalStatus;
   int? isNotificationOnOff;
-  dynamic accepted;
+  dynamic esignatureAccepted;
   String? fullName;
   String? email;
   String? countryCode;
@@ -178,7 +178,7 @@ class Body {
     map['role'] = role;
     map['adminApprovalStatus'] = adminApprovalStatus;
     map['isNotificationOnOff'] = isNotificationOnOff;
-    map['accepted'] = accepted;
+    map['esignatureAccepted'] = esignatureAccepted;
     map['fullName'] = fullName;
     map['email'] = email;
     map['countryCode'] = countryCode;

@@ -632,13 +632,38 @@ class _PremiumRequestCardState extends State<_PremiumRequestCard>
       }
     });
 
-    final createdAtStr = widget.item.updatedAt;
-    if (createdAtStr != null) {
-      final createdAt = DateTime.tryParse(createdAtStr)?.toLocal();
-      if (createdAt != null) {
-        final now = DateTime.now();
-        final diff = now.difference(createdAt).inSeconds;
+    final updatedAtStr = widget.item.updatedAt;
+    final createdAtStr = widget.item.createdAt;
+    
+    final now = DateTime.now();
+    int? createdAtDiff;
+    int? updatedAtDiff;
 
+    if (createdAtStr != null) {
+      final parsedCreatedAt = DateTime.tryParse(createdAtStr)?.toLocal();
+      if (parsedCreatedAt != null) {
+        createdAtDiff = now.difference(parsedCreatedAt).inSeconds;
+      }
+    }
+
+    if (updatedAtStr != null) {
+      final parsedUpdatedAt = DateTime.tryParse(updatedAtStr)?.toLocal();
+      if (parsedUpdatedAt != null) {
+        updatedAtDiff = now.difference(parsedUpdatedAt).inSeconds;
+      }
+    }
+
+    debugPrint(
+      "REQUEST_TIME_LOG Request ID: ${widget.item.id} | "
+      "createdAt: $createdAtStr (diff: ${createdAtDiff}s) | "
+      "updatedAt: $updatedAtStr (diff: ${updatedAtDiff}s)"
+    );
+
+    final targetDateStr = updatedAtStr ?? createdAtStr;
+    if (targetDateStr != null) {
+      final targetDate = DateTime.tryParse(targetDateStr)?.toLocal();
+      if (targetDate != null) {
+        final diff = updatedAtDiff ?? createdAtDiff ?? 0;
         if (diff >= kRequestAutoRejectSeconds) {
           _handled = true;
           WidgetsBinding.instance.addPostFrameCallback((_) {

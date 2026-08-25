@@ -137,7 +137,8 @@ flutter:
 flutter_launcher_icons:
   android: "ic_launcher"
   ios: true
-  image_path: "assets/images/app_logo.jpeg" # Ensure your file is named exactly this
-  adaptive_icon_background: "#FFFFFF"     # Matches your logo's white background
-  adaptive_icon_foreground: "assets/images/app_logo.jpeg"
-  adaptive_icon_foreground_inset: 30
+  image_path: "assets/images/app_logo.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/app_logo.png"
+  adaptive_icon_foreground_inset: 0
+

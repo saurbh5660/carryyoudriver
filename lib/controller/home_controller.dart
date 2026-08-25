@@ -57,21 +57,21 @@ class HomeController extends GetxController
       socketService.connectToServer();
       socketService.addListener(this);
     } else {
-      Logger().d("SOCKET_TRACE socket connection disabled for crash isolation");
+      // Logger().d("SOCKET_TRACE socket connection disabled for crash isolation");
     }
 
     /// LOCATION
     locationService = LocationService(this);
     if (_enableLocationTracking) {
       locationService.startLocationUpdates().catchError((Object e, StackTrace stackTrace) {
-        Logger().e(
-          "Location updates failed to start",
-          error: e,
-          stackTrace: stackTrace,
-        );
+        // Logger().e(
+        //   "Location updates failed to start",
+        //   error: e,
+        //   stackTrace: stackTrace,
+        // );
       });
     } else {
-      Logger().d("LOCATION_TRACE location tracking disabled for crash isolation");
+      // Logger().d("LOCATION_TRACE location tracking disabled for crash isolation");
     }
   }
 
@@ -82,27 +82,28 @@ class HomeController extends GetxController
     if (!isOnline.value) return;
 
     try {
-      Logger().d("REQUEST_TRACE getRequests start loader=$loader");
+      // Logger().d("REQUEST_TRACE getRequests start loader=$loader");
       var response = await ApiProvider().requestList(loader);
-      Logger().d(
-        "REQUEST_TRACE getRequests response success=${response.success} count=${response.body?.length ?? 0}",
+      Logger().d("SFsfSFsFSD-----------${const JsonEncoder.withIndent('  ').convert(
+          response.body?.map((item) => item.toJson()).toList(),
+        )}",
       );
 
       if (response.success == true) {
         if (!_enableRequestListMutation) {
-          Logger().d("REQUEST_TRACE requestList mutation disabled for crash isolation");
+          // Logger().d("REQUEST_TRACE requestList mutation disabled for crash isolation");
           return;
         }
 
-        Logger().d("REQUEST_TRACE clearing requestList");
+        // Logger().d("REQUEST_TRACE clearing requestList");
         requestList.clear();
-        Logger().d("REQUEST_TRACE assigning requestList");
+        // Logger().d("REQUEST_TRACE assigning requestList");
         requestList.assignAll(response.body ?? []);
-        Logger().d("REQUEST_TRACE requestList assigned count=${requestList.length}");
+        // Logger().d("REQUEST_TRACE requestList assigned count=${requestList.length}");
 
-        Logger().d("REQUEST_TRACE fetchAllRoadDistances start");
+        // Logger().d("REQUEST_TRACE fetchAllRoadDistances start");
         await fetchAllRoadDistances();
-        Logger().d("REQUEST_TRACE fetchAllRoadDistances complete");
+        // Logger().d("REQUEST_TRACE fetchAllRoadDistances complete");
       } else {
         Utils.showErrorToast(
           message: response.message ?? "Failed to fetch requests",
@@ -163,8 +164,8 @@ class HomeController extends GetxController
       latitude.value = position.latitude;
       longitude.value = position.longitude;
 
-      Logger().d("Driver Lat: ${latitude.value}");
-      Logger().d("Driver Lng: ${longitude.value}");
+      // Logger().d("Driver Lat: ${latitude.value}");
+      // Logger().d("Driver Lng: ${longitude.value}");
 
       /// MOVE MAP CAMERA
       mapController
@@ -174,11 +175,11 @@ class HomeController extends GetxController
         ),
       )
           .catchError((Object e, StackTrace stackTrace) {
-        Logger().e(
-          "Home map camera update failed",
-          error: e,
-          stackTrace: stackTrace,
-        );
+        // Logger().e(
+        //   "Home map camera update failed",
+        //   error: e,
+        //   stackTrace: stackTrace,
+        // );
       });
 
       /// UPDATE DRIVER MARKER
@@ -196,18 +197,18 @@ class HomeController extends GetxController
         position.latitude,
         position.longitude,
       ).catchError((Object e, StackTrace stackTrace) {
-        Logger().e(
-          "Location address update failed",
-          error: e,
-          stackTrace: stackTrace,
-        );
+        // Logger().e(
+        //   "Location address update failed",
+        //   error: e,
+        //   stackTrace: stackTrace,
+        // );
       });
     } catch (e, stackTrace) {
-      Logger().e(
-        "Location update handling failed",
-        error: e,
-        stackTrace: stackTrace,
-      );
+      // Logger().e(
+      //   "Location update handling failed",
+      //   error: e,
+      //   stackTrace: stackTrace,
+      // );
     }
   }
 
@@ -232,12 +233,12 @@ class HomeController extends GetxController
         if (_enableLocationApiUpdate) {
           await updateLocation();
         } else {
-          Logger().d("LOCATION_TRACE updateLocation disabled for crash isolation");
+          // Logger().d("LOCATION_TRACE updateLocation disabled for crash isolation");
         }
       }
 
     } catch (e, stackTrace) {
-      Logger().e("Geocoding error", error: e, stackTrace: stackTrace);
+      // Logger().e("Geocoding error", error: e, stackTrace: stackTrace);
     }
   }
 
@@ -255,7 +256,7 @@ class HomeController extends GetxController
     try {
       await ApiProvider().updateLocation(data, false);
     } catch (e, stackTrace) {
-      Logger().e("Update location API failed", error: e, stackTrace: stackTrace);
+      // Logger().e("Update location API failed", error: e, stackTrace: stackTrace);
     }
   }
 
@@ -296,7 +297,7 @@ class HomeController extends GetxController
         Utils.showErrorToast(message: response.message ?? "Request update failed");
       }
     } catch (e, stackTrace) {
-      Logger().e("Accept/reject failed", error: e, stackTrace: stackTrace);
+      // Logger().e("Accept/reject failed", error: e, stackTrace: stackTrace);
       Utils.showErrorToast(message: "Request update failed");
     }
   }
@@ -309,7 +310,7 @@ class HomeController extends GetxController
 
     if (eventType == 'createBooking' && isOnline.value) {
       if (!_handleCreateBookingSocket) {
-        Logger().d("SOCKET_TRACE createBooking ignored for crash isolation");
+        // Logger().d("SOCKET_TRACE createBooking ignored for crash isolation");
         return;
       }
       getRequests(false);
@@ -326,7 +327,7 @@ class HomeController extends GetxController
 
       for (final item in currentRequests) {
         try {
-          Logger().d("DISTANCE_TRACE start booking=${item.id}");
+          // Logger().d("DISTANCE_TRACE start booking=${item.id}");
 
           if (item.pickUpLatitude != null &&
               latitude.value != 0.0) {
@@ -342,22 +343,22 @@ class HomeController extends GetxController
               (request) => request.id == item.id,
             );
             currentItem?.distanceTxt = distanceText;
-            Logger().d("DISTANCE_TRACE complete booking=${item.id} distance=$distanceText");
+            // Logger().d("DISTANCE_TRACE complete booking=${item.id} distance=$distanceText");
           } else {
-            Logger().d("DISTANCE_TRACE skipped booking=${item.id}");
+            // Logger().d("DISTANCE_TRACE skipped booking=${item.id}");
           }
         } catch (e, stackTrace) {
-          Logger().e(
-            "Distance calculation failed for booking=${item.id}",
-            error: e,
-            stackTrace: stackTrace,
-          );
+          // Logger().e(
+          //   "Distance calculation failed for booking=${item.id}",
+          //   error: e,
+          //   stackTrace: stackTrace,
+          // );
         }
       }
 
       requestList.refresh();
     } catch (e, stackTrace) {
-      Logger().e("Road distance calculation failed", error: e, stackTrace: stackTrace);
+      // Logger().e("Road distance calculation failed", error: e, stackTrace: stackTrace);
     }
   }
 
@@ -374,16 +375,16 @@ class HomeController extends GetxController
 
     try {
 
-      Logger().d("DISTANCE_TRACE calling directions API");
+      // Logger().d("DISTANCE_TRACE calling directions API");
       final response = await http.get(Uri.parse(url)).timeout(
         const Duration(seconds: 8),
       );
-      Logger().d("DISTANCE_TRACE directions status=${response.statusCode}");
+      // Logger().d("DISTANCE_TRACE directions status=${response.statusCode}");
 
       if (response.statusCode == 200) {
 
         final data = json.decode(response.body);
-        Logger().d("DISTANCE_TRACE directions apiStatus=${data['status']}");
+        // Logger().d("DISTANCE_TRACE directions apiStatus=${data['status']}");
 
         if (data['status'] == 'OK') {
           return data['routes'][0]['legs'][0]['distance']['text'];
@@ -391,7 +392,7 @@ class HomeController extends GetxController
       }
 
     } catch (e, stackTrace) {
-      Logger().e("Distance API Error", error: e, stackTrace: stackTrace);
+      // Logger().e("Distance API Error", error: e, stackTrace: stackTrace);
     }
 
     return "N/A";

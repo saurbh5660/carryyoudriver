@@ -24,22 +24,22 @@ class LocationService {
   /// 3. Keeps the legacy 30-second timer as a safety net in case the
   ///    stream is throttled / paused by the OS.
   Future<void> startLocationUpdates() async {
-    _log.i("LocationService: startLocationUpdates");
+    // _log.i("LocationService: startLocationUpdates");
     bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    _log.i("LocationService: serviceEnabled=$serviceEnabled");
+    // _log.i("LocationService: serviceEnabled=$serviceEnabled");
     if (!serviceEnabled) {
       listener.onLocationDisabled();
       return;
     }
 
     permission = await Geolocator.checkPermission();
-    _log.i("LocationService: checkPermission=$permission");
+    // _log.i("LocationService: checkPermission=$permission");
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      _log.i("LocationService: requestPermission=$permission");
+      // _log.i("LocationService: requestPermission=$permission");
       if (permission == LocationPermission.denied) {
         listener.onLocationDisabled();
         return;
@@ -47,7 +47,7 @@ class LocationService {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      _log.w("LocationService: deniedForever - cannot get location");
+      // _log.w("LocationService: deniedForever - cannot get location");
       listener.onLocationDisabled();
       return;
     }
@@ -57,22 +57,22 @@ class LocationService {
     //    waiting for a fresh GPS fix.
     try {
       final last = await Geolocator.getLastKnownPosition();
-      _log.i("LocationService: lastKnown=${last?.latitude},${last?.longitude}");
+      // _log.i("LocationService: lastKnown=${last?.latitude},${last?.longitude}");
       if (last != null) {
         listener.onLocationUpdated(last);
       }
     } catch (e) {
-      _log.w("LocationService: getLastKnownPosition failed: $e");
+      // _log.w("LocationService: getLastKnownPosition failed: $e");
     }
 
     // 2) Kick off a real GPS fix in parallel.
     Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     ).then((p) {
-      _log.i("LocationService: getCurrentPosition=${p.latitude},${p.longitude}");
+      // _log.i("LocationService: getCurrentPosition=${p.latitude},${p.longitude}");
       listener.onLocationUpdated(p);
     }).catchError((e) {
-      _log.w("LocationService: getCurrentPosition failed: $e");
+      // _log.w("LocationService: getCurrentPosition failed: $e");
     });
 
     // 3) Continuous live updates.
@@ -85,17 +85,17 @@ class LocationService {
         ),
       ).listen(
         (p) {
-          _log.i(
-            "LocationService: stream=${p.latitude},${p.longitude}",
-          );
+          // _log.i(
+          //    "LocationService: stream=${p.latitude},${p.longitude}",
+          // );
           listener.onLocationUpdated(p);
         },
         onError: (e) {
-          _log.w("LocationService: stream error: $e");
+          // _log.w("LocationService: stream error: $e");
         },
       );
     } catch (e) {
-      _log.w("LocationService: getPositionStream failed: $e");
+      // _log.w("LocationService: getPositionStream failed: $e");
     }
 
     // 4) Safety-net poll every 30s in case the stream gets paused by
